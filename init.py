@@ -1,7 +1,9 @@
 from indeed import extractIndeedPages
+from indeed import extractIndeedJobs
 
 
 
-indeed_extract = extractIndeedPages();
+indeed_extract = extractIndeedPages()
 
-print(indeed_extract);
+extractIndeedJobs(indeed_extract)
+
