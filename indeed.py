@@ -23,14 +23,55 @@ def extractIndeedPages():
     return MAX_page;
 
 
+def getLocation(html):
+
+    location_series = html.find("span", {"class":"location"})
+    if location_series is not None:
+        return location_series.string
+    else:
+        location_series = html.find("div",{"class":"location"})
+        return location_series.string
+
+def getSalaryInfo(html):
+    if html is not None:
+        target = html.find("span").find("span",{"class":"salaryText"})
+        return (target.string)[1:]
+    
+    else:
+        return "NO INFO"
+
+
+
+
+def getJobNCompany(result): ## extract jobs
+    title = result.find("h2",{"class":"title"}).find("a")["title"]
+    title_sjcl =result.find("div",{"class":"sjcl"})
+    titles = title_sjcl.find("div").find("span",{"class":"company"})
+    title_anchor = titles.find("a",{"class":"turnstileLink"})
+    salary_loc = result.find("div",{"class":"salarySnippet"})
+
+    salary = getSalaryInfo(salary_loc)
+
+
+    location = getLocation(title_sjcl)
+    if title_anchor is None:
+        company = str(titles.string)
+    else:
+        company = str(title_anchor.string)
+    
+    company =company.strip( )
+    return {"title":title , "company":company , "location":location, "salary":salary}
+
+
 def extractIndeedJobs(last_page):
     jobs=[]
     ##for page in range(last_page):
+        
     result = requests.get(f"{INDEED_URL}&start={0*LIMIT}")
     soup = BeautifulSoup(result.text, "html.parser")
-    manu_result = soup.find_all("div",{"class" :"jobsearch-SerpJobCard"})
+    manu_result = soup.find_all("div",{"class" :"jobsearch-SerpJobCard"})  ## 표제 section 추출
     for result in manu_result:
-        titles = result.find("h2",{"class":"title"}).find("a")["title"]
-        print(titles)
+        jobs.append(getJobNCompany(result))
     return jobs
-    
+
+

@@ -5,5 +5,7 @@ from indeed import extractIndeedJobs
 
 indeed_extract = extractIndeedPages()
 
-extractIndeedJobs(indeed_extract)
+jobs=extractIndeedJobs(indeed_extract)
 
+
+print(jobs)
