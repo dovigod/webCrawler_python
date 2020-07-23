@@ -5,7 +5,7 @@ INDEED_URL = f'https://kr.indeed.com/%EC%B7%A8%EC%97%85?as_and=python&as_phr=&as
 
 INDEED_result = requests.get(INDEED_URL)
 
-def extractIndeedPages():
+def getLastPage():
     soup = BeautifulSoup(INDEED_result.text, "html.parser")
 
     pagination = soup.find("div",{"class":"pagination"})
@@ -20,6 +20,7 @@ def extractIndeedPages():
 
 
     MAX_page = spans[-1]
+    print(MAX_page)
     return MAX_page;
 
 
@@ -49,7 +50,8 @@ def getJobNCompany(result): ## extract jobs
     titles = title_sjcl.find("div").find("span",{"class":"company"})
     title_anchor = titles.find("a",{"class":"turnstileLink"})
     salary_loc = result.find("div",{"class":"salarySnippet"})
-
+    job_id = result["data-jk"]
+    APPLY_LINK = f'https://kr.indeed.com/%EC%B1%84%EC%9A%A9%EB%B3%B4%EA%B8%B0?jk={job_id}'
     salary = getSalaryInfo(salary_loc)
 
 
@@ -60,18 +62,25 @@ def getJobNCompany(result): ## extract jobs
         company = str(title_anchor.string)
     
     company =company.strip( )
-    return {"title":title , "company":company , "location":location, "salary":salary}
+    return {"title":title , "company":company , "location":location, "salary":salary,"url":APPLY_LINK}
 
 
 def extractIndeedJobs(last_page):
     jobs=[]
-    ##for page in range(last_page):
-        
-    result = requests.get(f"{INDEED_URL}&start={0*LIMIT}")
-    soup = BeautifulSoup(result.text, "html.parser")
-    manu_result = soup.find_all("div",{"class" :"jobsearch-SerpJobCard"})  ## 표제 section 추출
-    for result in manu_result:
-        jobs.append(getJobNCompany(result))
+    for page in range(last_page):
+        print(f"Scapping page {page}")
+        result = requests.get(f"{INDEED_URL}&start={page*LIMIT}")
+        soup = BeautifulSoup(result.text, "html.parser")
+        manu_result = soup.find_all("div",{"class" :"jobsearch-SerpJobCard"})  ## 표제 section 추출
+        for result in manu_result:
+            jobs.append(getJobNCompany(result))
+
     return jobs
 
+
+
+def get_jobs():
+    Lpage = getLastPage()
+    jobs=extractIndeedJobs(Lpage)
+    return jobs
 

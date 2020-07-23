@@ -1,11 +1,8 @@
-from indeed import extractIndeedPages
-from indeed import extractIndeedJobs
+
+from indeed import get_jobs as Indeed_jobs
+from SOF import get_jobs as SOF_jobs
+
+stackOverFlow = SOF_jobs
+Indeed = Indeed_jobs
 
 
-
-indeed_extract = extractIndeedPages()
-
-jobs=extractIndeedJobs(indeed_extract)
-
-
-print(jobs)
