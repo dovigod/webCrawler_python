@@ -1,11 +1,10 @@
 import requests
 from bs4 import BeautifulSoup ##screen scraping lib
 LIMIT = 50
-INDEED_URL = f'https://kr.indeed.com/%EC%B7%A8%EC%97%85?as_and=python&as_phr=&as_any=&as_not=&as_ttl=&as_cmp=&jt=all&st=&as_src=&radius=25&l=%EC%84%9C%EC%9A%B8+%EA%B0%95%EB%82%A8%EA%B5%AC&fromage=any&limit={LIMIT}&sort=&psf=advsrch&from=advancedsearch'
+def getLastPage(url):
 
-INDEED_result = requests.get(INDEED_URL)
+    INDEED_result = requests.get(url)
 
-def getLastPage():
     soup = BeautifulSoup(INDEED_result.text, "html.parser")
 
     pagination = soup.find("div",{"class":"pagination"})
@@ -20,7 +19,7 @@ def getLastPage():
 
 
     MAX_page = spans[-1]
-    print(MAX_page)
+   
     return MAX_page;
 
 
@@ -65,7 +64,7 @@ def getJobNCompany(result): ## extract jobs
     return {"title":title , "company":company , "location":location,"url":APPLY_LINK}
 
 
-def extractIndeedJobs(last_page):
+def extractIndeedJobs(last_page , INDEED_URL):
     jobs=[]
     for page in range(last_page):
         if page == 15:
@@ -81,8 +80,10 @@ def extractIndeedJobs(last_page):
 
 
 
-def get_jobs():
-    Lpage = getLastPage()
-    jobs=extractIndeedJobs(Lpage)
+def get_jobs(word):
+    url = f'https://kr.indeed.com/%EC%B7%A8%EC%97%85?as_and={word}&as_phr=&as_any=&as_not=&as_ttl=&as_cmp=&jt=all&st=&as_src=&radius=25&l=%EC%84%9C%EC%9A%B8+%EA%B0%95%EB%82%A8%EA%B5%AC&fromage=any&limit={LIMIT}&sort=&psf=advsrch&from=advancedsearch'
+
+    Lpage = getLastPage(url)
+    jobs=extractIndeedJobs(Lpage , url)
     return jobs
 

@@ -83,7 +83,7 @@ def extractJobInfo(LPage):
     return Information
 
 
-def get_jobs():
+def get_jobs(word):
     tmp_SOF_html = getSOFhtml()
     last_page = getLastPage(tmp_SOF_html)
     jobs = extractJobInfo(last_page)
