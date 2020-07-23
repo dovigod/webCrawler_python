@@ -50,8 +50,9 @@ def extractJobInfo(LPage):
     i=0
     for page in range(LPage):
         ##https://stackoverflow.com/jobs/412456/
-        print(f"scrapping page {page+1}")
-        raw_data = requests.get(f'{URL}pg={page+1}')
+        if page == 15:
+            break
+        raw_data = requests.get(f'{URL}&pg={page+1}')
         parsed = BeautifulSoup(raw_data.text,"html.parser")
         job_list = parsed.find("div",{"class":"listResults"})
         job_cell = job_list.find_all("div",{"class":"fl1"})
@@ -76,8 +77,8 @@ def extractJobInfo(LPage):
             ##Information[index] = {"url":url}
             i=i+1
         
-        print(Information)
-
+    ###find_all (~~~ recursive == false)  ==> 1층에 있는것만 끓어옴
+    ### 리스트에 오직 값이 2개!! 만있을때  company, location = 
     
     return Information
 
@@ -86,5 +87,6 @@ def get_jobs():
     tmp_SOF_html = getSOFhtml()
     last_page = getLastPage(tmp_SOF_html)
     jobs = extractJobInfo(last_page)
- 
+    
     return jobs
+

@@ -62,13 +62,15 @@ def getJobNCompany(result): ## extract jobs
         company = str(title_anchor.string)
     
     company =company.strip( )
-    return {"title":title , "company":company , "location":location, "salary":salary,"url":APPLY_LINK}
+    return {"title":title , "company":company , "location":location,"url":APPLY_LINK}
 
 
 def extractIndeedJobs(last_page):
     jobs=[]
     for page in range(last_page):
-        print(f"Scapping page {page}")
+        if page == 15:
+            break
+        
         result = requests.get(f"{INDEED_URL}&start={page*LIMIT}")
         soup = BeautifulSoup(result.text, "html.parser")
         manu_result = soup.find_all("div",{"class" :"jobsearch-SerpJobCard"})  ## 표제 section 추출
