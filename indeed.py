@@ -9,9 +9,11 @@ def getLastPage(url):
 
     pagination = soup.find("div",{"class":"pagination"})
 
-
+    print("#$@#$@#$@#$@#$@#")
+    if pagination == None:
+        return 0
     pages=pagination.find_all('a')
-    
+
     spans = []
     
     for page in pages[:-1]:
@@ -19,7 +21,8 @@ def getLastPage(url):
 
 
     MAX_page = spans[-1]
-   
+    print(MAX_page)
+    
     return MAX_page;
 
 
@@ -67,9 +70,7 @@ def getJobNCompany(result): ## extract jobs
 def extractIndeedJobs(last_page , INDEED_URL):
     jobs=[]
     for page in range(last_page):
-        if page == 15:
-            break
-        
+    
         result = requests.get(f"{INDEED_URL}&start={page*LIMIT}")
         soup = BeautifulSoup(result.text, "html.parser")
         manu_result = soup.find_all("div",{"class" :"jobsearch-SerpJobCard"})  ## 표제 section 추출
@@ -82,8 +83,9 @@ def extractIndeedJobs(last_page , INDEED_URL):
 
 def get_jobs(word):
     url = f'https://kr.indeed.com/%EC%B7%A8%EC%97%85?as_and={word}&as_phr=&as_any=&as_not=&as_ttl=&as_cmp=&jt=all&st=&as_src=&radius=25&l=%EC%84%9C%EC%9A%B8+%EA%B0%95%EB%82%A8%EA%B5%AC&fromage=any&limit={LIMIT}&sort=&psf=advsrch&from=advancedsearch'
-
+   
     Lpage = getLastPage(url)
     jobs=extractIndeedJobs(Lpage , url)
+    print(jobs)
     return jobs
 

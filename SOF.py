@@ -1,12 +1,12 @@
 import requests
 from bs4 import BeautifulSoup
 
-URL = f'https://stackoverflow.com/jobs?'
+
 
 i=0
 
         
-def getSOFhtml():
+def getSOFhtml(URL):
     result = requests.get(URL)
     soup = BeautifulSoup(result.text, "html.parser")
     
@@ -44,14 +44,13 @@ def getJobURL(html):
     return target
 
 
-def extractJobInfo(LPage):
+def extractJobInfo(LPage , URL):
 
     Information = []
     i=0
     for page in range(LPage):
         ##https://stackoverflow.com/jobs/412456/
-        if page == 15:
-            break
+       
         raw_data = requests.get(f'{URL}&pg={page+1}')
         parsed = BeautifulSoup(raw_data.text,"html.parser")
         job_list = parsed.find("div",{"class":"listResults"})
@@ -84,9 +83,10 @@ def extractJobInfo(LPage):
 
 
 def get_jobs(word):
-    tmp_SOF_html = getSOFhtml()
+    url = f'https://stackoverflow.com/jobs?q={word}'
+    tmp_SOF_html = getSOFhtml(url)
     last_page = getLastPage(tmp_SOF_html)
-    jobs = extractJobInfo(last_page)
+    jobs = extractJobInfo(last_page , url)
     
     return jobs
 

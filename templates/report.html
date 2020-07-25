@@ -4,10 +4,38 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Job Scrapper</title>
+    <style>
+        section{
+            display: grid;
+            grid-template-columns: repeat(4,1fr);
+            gap:20px
+        }
+    </style>
 </head>
 <body>
     <h1>Search Results</h1>
-    <h3>You are looking for {{searchBy}}</h3>
+    <h3> Found {{result_numb}} about {{searchBy}}</h3>
+
+    <a href="/export?word={{searchBy}}">export as CSV</a>
+
+    <form action="/report" methon = "get">
+        <input type="text" placeholder="Search for jobs" required name = "word">
+        <button>Search</button>
+    </form>
+
     
+    <section>
+        <h3>title</h3>
+        <h3>company</h3>
+        <h3>location</h3>
+        <h3>URL</h3>
+        {% for job in jobs %}
+        <span>{{job.title}}</span>
+        <span>{{job.company}}</span>
+        <span>{{job.location}}</span>
+        <a href={{job.link}}>Apply</a>
+        {% endfor %}
+    </section>
 </body>
 </html>
+
